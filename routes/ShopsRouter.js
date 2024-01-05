@@ -7,5 +7,6 @@ router.post('/Foodshop/', FoodshopController.addShop)
 router.delete('/Foodshop/:id', FoodshopController.deleteShop)
 router.put('/Foodshop/:id', FoodshopController.updateShop)
 router.get('/Foodshop/search/:key', FoodshopController.searchShop)
+router.post('/FilterFoodshop/',FoodshopController.filterShop)
 
 module.exports = router

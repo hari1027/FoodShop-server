@@ -86,5 +86,28 @@ module.exports = {
             res.status(500).json("Failed To Search the shop")
             console.log(error);
         }
+    },
+
+    filterShop: async(req,res) => {
+        const { shopName, shopAddress, shopCategory, foodCuisines } = req.body;
+        try {
+            const shopsList = await FoodShop.find().sort({ createdAt: -1 })
+            let filteredShops = shopsList
+              if (shopName && shopName !== '') {
+                filteredShops = filteredShops.filter(shop => shop.shopName === shopName);
+              }
+              if (shopCategory && shopCategory !== '') {
+                filteredShops = filteredShops.filter(shop => shop.shopCategory === shopCategory);
+              }
+              if (foodCuisines && foodCuisines.length > 0) {
+                filteredShops = filteredShops.filter(shop =>
+                    foodCuisines.some(foodCuisines => shop.foodCuisines.includes(foodCuisines))
+                );
+              }
+             res.json(filteredShops);
+        } catch (error) {
+            res.status(500).json("Failed To get ShopsList In Filter")
+            console.log(error);
+        }
     }
 }
