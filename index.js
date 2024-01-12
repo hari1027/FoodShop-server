@@ -55,11 +55,33 @@ const shops = {};
 
 // Calculate the average rating for a shop
 const calculateAverageRating = (shop) => {
-    if (shop.ratings.length === 0) {
+    if (shop.feedback.length === 0) {
         return 0;
     }
-    return shop.ratings.reduce((total, r) => total + r, 0) / shop.ratings.length;
+    else {
+        let avgRating = 0
+        shop.feedback.map((item) => {
+            avgRating = avgRating + item.rating
+        })
+        avgRating = avgRating / shop.feedback.length
+        return avgRating
+    }
 };
+
+const totalComments = (shop) => {
+    if (shop.feedback.length === 0) {
+        return 0;
+    }
+    else {
+        let totalComments = 0
+        shop.feedback.map((item) => {
+            if (item.name !== null && item.name !== undefined && item.name !== '') {
+                totalComments = totalComments + 1
+            }
+        })
+        return totalComments
+    }
+}
 
 // API endpoint to submit feedback for a shop
 app.post('/submitFeedback', (req, res) => {
@@ -68,7 +90,7 @@ app.post('/submitFeedback', (req, res) => {
     // Check if the shop exists in the data structure
     if (!shops[shopId]) {
         shops[shopId] = {
-            ratings: [],
+            // ratings: [],
             feedback: [],
         };
     }
@@ -87,7 +109,7 @@ app.post('/submitFeedback', (req, res) => {
     }
 
     // Update the shop's ratings array
-    shop.ratings.push(Number(rating));
+    // shop.ratings.push(Number(rating));
 
     // Send success response with status 200
     res.status(200).json({
@@ -103,7 +125,9 @@ app.get('/getShopRatingAndFeedback/:shopId', (req, res) => {
     if (shops[shopId]) {
         const shop = shops[shopId];
         const averageRating = calculateAverageRating(shop);
-        const data = { shop, averageRating };
+        let totalPeopleGivenRating = shop.feedback.length;
+        let totalPeopleGivenComments = totalComments(shop)
+        const data = { shop, averageRating, totalPeopleGivenRating, totalPeopleGivenComments };
         res.status(200).json(data);
     } else {
         res.status(404).json({
