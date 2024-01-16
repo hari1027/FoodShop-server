@@ -90,7 +90,6 @@ app.post('/submitFeedback', (req, res) => {
     // Check if the shop exists in the data structure
     if (!shops[shopId]) {
         shops[shopId] = {
-            // ratings: [],
             feedback: [],
         };
     }
@@ -134,6 +133,91 @@ app.get('/getShopRatingAndFeedback/:shopId', (req, res) => {
             message: 'Shop not found',
         });
     }
+});
+
+const bookMarkedShops = {};
+
+// API endpoint to bookmark a shop for a user
+app.post('/bookmarkShop', (req, res) => {
+    const { shopId, email } = req.body;
+
+    // Check if the shop exists in the data structure
+    if (!bookMarkedShops[shopId]) {
+        bookMarkedShops[shopId] = {
+            shopId: shopId,
+            bookmarkedBy: [],
+        };
+    }
+
+    // Check if the user has already bookmarked the shop
+    const isBookmarked = bookMarkedShops[shopId].bookmarkedBy.includes(email);
+
+    if (!isBookmarked) {
+        // Add the user's email to the list of users who bookmarked the shop
+        bookMarkedShops[shopId].bookmarkedBy.push(email);
+
+        // Send success response with status 200
+        res.status(200).json({
+            message: 'Shop bookmarked successfully',
+        });
+    } else {
+        // Send a response indicating that the shop is already bookmarked
+        res.status(400).json({
+            message: 'Shop is already bookmarked by the user',
+        });
+    }
+});
+
+//Api endpoint to remove bookMark for a user
+app.post('/removeShopFromBookmark', (req, res) => {
+    const { shopId, email } = req.body;
+
+    // Check if the shop exists in the data structure
+    if (bookMarkedShops[shopId]) {
+
+        // Check if the user has bookmarked the shop
+        const userIndex = bookMarkedShops[shopId].bookmarkedBy.indexOf(email);
+
+        if (userIndex !== -1) {
+            // Remove the user's email from the list of users who bookmarked the shop
+            bookMarkedShops[shopId].bookmarkedBy.splice(userIndex, 1);
+
+            // Send success response with status 200
+            res.status(200).json({
+                message: 'Shop removed from bookmarks for the user successfully',
+            });
+        } else {
+            // Send a response indicating that the user did not bookmark the shop
+            res.status(400).json({
+                message: 'User did not bookmark the shop',
+            });
+        }
+    } else {
+        // Send a response indicating that the shop does not exist
+        res.status(404).json({
+            message: 'Shop not found',
+        });
+    }
+});
+
+// API endpoint to get bookmarked shops for a user
+app.get('/getBookmarkedShops/:email', (req, res) => {
+    const { email } = req.params;
+    const bookmarkedShopsList = [];
+
+    // Iterate through all shops to find bookmarked shops for the user
+    Object.entries(bookMarkedShops).forEach(([shopId, shop]) => {
+        if (shop.bookmarkedBy.includes(email)) {
+            bookmarkedShopsList.push({
+                shopId,
+            });
+        }
+    });
+
+    res.status(200).json({
+        bookmarkedShopsList,
+    });
+
 });
 
 app.listen(process.env.PORT, () => console.log(`Example app listening on port ${process.env.PORT}!`))
