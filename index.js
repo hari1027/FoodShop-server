@@ -220,4 +220,28 @@ app.get('/getBookmarkedShops/:email', (req, res) => {
 
 });
 
+//Api endpoint to get all name and comments of a shop
+app.get('/getCommentsList/:shopId', (req, res) => {
+    const { shopId } = req.params;
+
+    // Check if the shop exists in the data structure
+    if (!shops[shopId]) {
+        return res.status(404).json({
+            message: 'Shop not found',
+        });
+    }
+
+    const shop = shops[shopId];
+
+    // Filter out feedback where both name and comments are null
+    const shopFeedback = shop.feedback
+        .filter((feedback) => feedback.name !== null || feedback.comments !== null)
+        .map((feedback) => ({
+            name: feedback.name,
+            comments: feedback.comments,
+        }));
+
+    res.status(200).json(shopFeedback);
+});
+
 app.listen(process.env.PORT, () => console.log(`Example app listening on port ${process.env.PORT}!`))
