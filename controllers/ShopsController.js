@@ -53,7 +53,9 @@ module.exports = {
                 shopCategory: req.body.shopCategory,
                 foodCuisines: req.body.foodCuisines,
                 shopOwnerName: req.body.shopOwnerName,
-                shopOwnerNumber: req.body.shopOwnerNumber
+                shopOwnerNumber: req.body.shopOwnerNumber,
+                menuImages: req.body.menuImages,
+                shopImages: req.body.shopImages
             });
             await updateShop.save();
             res.status(200).json(`Shop Updated Successfully`)
@@ -103,6 +105,10 @@ module.exports = {
                 filteredShops = filteredShops.filter(shop =>
                     foodCuisines.some(foodCuisines => shop.foodCuisines.includes(foodCuisines))
                 );
+            }
+            if (shopAddress && shopAddress !== '') {
+                const searchTerm = shopAddress.toLowerCase();
+                filteredShops = filteredShops.filter(shop => shop.shopAddress.toLowerCase().includes(searchTerm))
             }
             res.json(filteredShops);
         } catch (error) {

@@ -5,7 +5,8 @@ const ShopSchema = new mongoose.Schema({
     shopAddress: { type: String, required: true },
     shopCategory: { type: String, required: true },
     foodCuisines: { type: [String], required: true },
-    // menuImages: { type: [String], required: true },
+    menuImages: [],
+    shopImages: [],
     shopOwnerName: { type: String, required: true },
     shopOwnerNumber: { type: String, required: true },
 }, { timestamps: true });
