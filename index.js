@@ -244,4 +244,8 @@ app.get('/getCommentsList/:shopId', (req, res) => {
     res.status(200).json(shopFeedback);
 });
 
+app.get("/", (req, res) =>{
+    res.send ("welcome to Foodshop Api's")
+})
+
 app.listen(process.env.PORT, () => console.log(`Example app listening on port ${process.env.PORT}!`))
