@@ -8,6 +8,7 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 
 dotenv.config()
+console.log("hiiiiiiiiiii")
 console.log(process.env.MONGO_URL)
 mongoose.connect(process.env.MONGO_URL).then(() => console.log('DB Connected')).catch((err) => console.log(err))
 
@@ -247,6 +248,7 @@ app.get('/getCommentsList/:shopId', (req, res) => {
 
 app.get("/", (req, res) =>{
     res.send ("welcome to Foodshop Api's")
+    res.send(process.env.MONGO_URL)
 })
 
 app.listen(process.env.PORT, () => console.log(`Example app listening on port ${process.env.PORT}!`))
