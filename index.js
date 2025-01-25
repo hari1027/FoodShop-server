@@ -247,7 +247,6 @@ app.get('/getCommentsList/:shopId', (req, res) => {
 });
 
 app.get("/", (req, res) =>{
-    res.send ("welcome to Foodshop Api's")
     res.send(process.env.MONGO_URL)
 })
 
