@@ -8,6 +8,7 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 
 dotenv.config()
+console.log(process.env.MONGO_URL)
 mongoose.connect(process.env.MONGO_URL).then(() => console.log('DB Connected')).catch((err) => console.log(err))
 
 app.use(express.json({ limit: '10mb' }))
